@@ -11,6 +11,8 @@ function App() {
       setRepositories(response.data);
     })
   }, []);
+
+
 async function handleAddRepository() {
   const response = await api.post('repositories', {
     title: faker.hacker.phrase(),
@@ -23,7 +25,13 @@ async function handleAddRepository() {
 
 async function handleRemoveRepository(id) {
   console.log(id)
-  // TODO
+
+  const response = await api.delete(`repositories/${id}`);
+  if(response.status === 204){
+    api.get('repositories').then(response => {
+      setRepositories(response.data);
+    })
+  }
 }
 
 return (

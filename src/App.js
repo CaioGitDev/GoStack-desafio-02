@@ -13,40 +13,43 @@ function App() {
   }, []);
 
 
-async function handleAddRepository() {
-  const response = await api.post('repositories', {
-    title: faker.hacker.phrase(),
-    url: faker.internet.email(),
-    techs: faker.company.suffixes()
-  });
-   const repo = response.data;
-   setRepositories([...repositories, repo]);
-}
-
-async function handleRemoveRepository(id) {
-  console.log(id)
-
-  const response = await api.delete(`repositories/${id}`);
-  if(response.status === 204){
-    api.get('repositories').then(response => {
-      setRepositories(response.data);
-    })
+  async function handleAddRepository() {
+    const response = await api.post('repositories', {
+      title: faker.hacker.phrase(),
+      url: faker.internet.email(),
+      techs: faker.company.suffixes()
+    });
+    const repo = response.data;
+    setRepositories([...repositories, repo]);
   }
-}
 
-return (
-  <div>
-    <ul data-testid="repository-list">
-      {repositories.map(repo => <li key={repo.id}>
+  async function handleRemoveRepository(id) {
+    console.log(id)
+
+    const response = await api.delete(`repositories/${id}`);
+    if (response.status === 204) {
+      api.get('repositories').then(response => {
+        setRepositories(repositories.filter(
+          repository => repository.id !== id
+        ));
+      })
+    }
+  }
+
+  return (
+    <div>
+      <ul data-testid="repository-list">
+
+        {repositories.map(repo => (<li key={repo.id}>
           {repo.title}
           <button onClick={() => handleRemoveRepository(repo.id)}>Remover</button>
-        </li>)}
+        </li>))}
 
-    </ul>
+      </ul>
 
-    <button onClick={handleAddRepository}>Adicionar</button>
-  </div>
-);
+      <button onClick={handleAddRepository}>Adicionar</button>
+    </div>
+  );
 }
 
 export default App;

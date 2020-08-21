@@ -12,7 +12,13 @@ function App() {
     })
   }, []);
 async function handleAddRepository() {
-  // TODO
+  const response = await api.post('repositories', {
+    title: faker.hacker.phrase(),
+    url: faker.internet.email(),
+    techs: faker.company.suffixes()
+  });
+   const repo = response.data;
+   setRepositories([...repositories, repo]);
 }
 
 async function handleRemoveRepository(id) {

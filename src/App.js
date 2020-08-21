@@ -1,31 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import * as faker from 'faker'
 
 import "./styles.css";
+import api from "./services/api";
 
 function App() {
-  async function handleAddRepository() {
-    // TODO
-  }
+  const [repositories, setRepositories] = useState([]);
+  useEffect(() => {
+    api.get('repositories').then(response => {
+      setRepositories(response.data);
+    })
+  }, []);
+async function handleAddRepository() {
+  // TODO
+}
 
-  async function handleRemoveRepository(id) {
-    // TODO
-  }
+async function handleRemoveRepository(id) {
+  console.log(id)
+  // TODO
+}
 
-  return (
-    <div>
-      <ul data-testid="repository-list">
-        <li>
-          Repositório 1
+return (
+  <div>
+    <ul data-testid="repository-list">
+      {repositories.map(repo => <li key={repo.id}>
+          {repo.title}
+          <button onClick={() => handleRemoveRepository(repo.id)}>Remover</button>
+        </li>)}
 
-          <button onClick={() => handleRemoveRepository(1)}>
-            Remover
-          </button>
-        </li>
-      </ul>
+    </ul>
 
-      <button onClick={handleAddRepository}>Adicionar</button>
-    </div>
-  );
+    <button onClick={handleAddRepository}>Adicionar</button>
+  </div>
+);
 }
 
 export default App;
